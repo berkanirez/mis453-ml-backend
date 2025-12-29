@@ -8,7 +8,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Model yükle (startup'ta)
+# Modeli yükle
 model = joblib.load("models/sentiment_model.joblib")
 
 class TextInput(BaseModel):
@@ -17,6 +17,10 @@ class TextInput(BaseModel):
 class PredictionResponse(BaseModel):
     label: str
     confidence: float
+
+@app.get("/")
+def root():
+    return {"message": "Sentiment API is running"}
 
 @app.get("/health")
 def health_check():
@@ -32,11 +36,3 @@ def predict_sentiment(input: TextInput):
         "label": label,
         "confidence": round(float(proba), 2)
     }
-
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def root():
-    return {"message": "Sentiment API is running"}
