@@ -8,7 +8,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Modeli yükle
 model = joblib.load("models/sentiment_model.joblib")
 
 class TextInput(BaseModel):
