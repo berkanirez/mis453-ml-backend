@@ -7,27 +7,33 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, f1_score
 import os
 
-# 1) Dataset yükle (scikit-learn demo text dataset)
-data = load_files("data", categories=["pos", "neg"], encoding="utf-8")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+
+
+
+data = load_files(DATA_DIR, categories=["pos", "neg"], encoding="utf-8")
+
 
 X = data.data
 y = data.target
 
-# 2) Train / Validation split
+
 X_train, X_val, y_train, y_val = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# 3) Pipeline: TF-IDF + Logistic Regression
+
 pipeline = Pipeline([
     ("tfidf", TfidfVectorizer(stop_words="english", max_features=5000)),
     ("clf", LogisticRegression(max_iter=1000))
 ])
 
-# 4) Train
+
 pipeline.fit(X_train, y_train)
 
-# 5) Evaluation
+
 train_preds = pipeline.predict(X_train)
 val_preds = pipeline.predict(X_val)
 
@@ -35,8 +41,9 @@ print("Train Accuracy:", accuracy_score(y_train, train_preds))
 print("Validation Accuracy:", accuracy_score(y_val, val_preds))
 print("Validation F1:", f1_score(y_val, val_preds))
 
-# 6) Model kaydet
-os.makedirs("models", exist_ok=True)
-joblib.dump(pipeline, "models/sentiment_model.joblib")
+
+os.makedirs(MODELS_DIR, exist_ok=True)
+joblib.dump(pipeline, os.path.join(MODELS_DIR, "sentiment_model.joblib"))
+
 
 print("Model saved to models/sentiment_model.joblib")

@@ -1,5 +1,8 @@
 import os
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+
 POS = [
     "I loved this movie, it was fantastic and inspiring.",
     "Great acting and an excellent story.",
@@ -37,7 +40,7 @@ def write_samples(base_dir: str, label: str, samples: list[str], repeat: int = 4
             idx += 1
 
 if __name__ == "__main__":
-    base = "data"
+    base = DATA_DIR
 
     write_samples(base, "pos", POS, repeat=4)
     write_samples(base, "neg", NEG, repeat=4)
