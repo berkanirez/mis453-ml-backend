@@ -32,3 +32,11 @@ def predict_sentiment(input: TextInput):
         "label": label,
         "confidence": round(float(proba), 2)
     }
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"message": "Sentiment API is running"}
