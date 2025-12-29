@@ -27,11 +27,22 @@ def health_check():
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict_sentiment(input: TextInput):
-    pred = model.predict([input.text])[0]
-    proba = model.predict_proba([input.text])[0].max()
+    prediction = model.predict([input.text])[0]
 
-    label = "POSITIVE" if pred == 1 else "NEGATIVE"
+    # Label güvenli belirleme
+    if isinstance(prediction, str):
+        label = prediction.upper()
+    else:
+        label = "POSITIVE" if prediction == 1 else "NEGATIVE"
+
+    # Confidence güvenli hesaplama
+    confidence = 0.5
+    if hasattr(model, "predict_proba"):
+        proba = model.predict_proba([input.text])[0]
+        confidence = float(max(proba))
+
     return {
         "label": label,
-        "confidence": round(float(proba), 2)
+        "confidence": round(confidence, 2)
     }
+
